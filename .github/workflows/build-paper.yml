@@ -1,0 +1,39 @@
+name: Build paper
+run-name: Build paper
+# Use `on` to set triggers for building (e.g. on opening a pull request or closing an issue):
+#   https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+on: workflow_dispatch  # manually trigger in the `Actions` tab
+jobs:
+  build_paper:
+    runs-on: ubuntu-latest
+    env:
+      # Set DOCPATH to location of main .tex file (without .tex extension)
+      DOCPATH: paper/project-name
+      BIBINPUTS: /tmp/cryptobib
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: "${{ env.DOCPATH }}.tex"
+          latexmk_use_xelatex: true
+          latexmk_shell_escape: true
+          work_in_root_file_dir: true
+          extra_system_packages: "curl"
+          pre_compile: |
+            mkdir /tmp/cryptobib && \
+            curl -o /tmp/cryptobib/abbrev0.bib https://cryptobib.di.ens.fr/cryptobib/static/files/abbrev0.bib && \
+            curl -o /tmp/cryptobib/abbrev1.bib https://cryptobib.di.ens.fr/cryptobib/static/files/abbrev1.bib && \
+            curl -o /tmp/cryptobib/abbrev2.bib https://cryptobib.di.ens.fr/cryptobib/static/files/abbrev2.bib && \
+            curl -o /tmp/cryptobib/abbrev3.bib https://cryptobib.di.ens.fr/cryptobib/static/files/abbrev3.bib && \
+            curl -o /tmp/cryptobib/crypto.bib https://cryptobib.di.ens.fr/cryptobib/static/files/crypto.bib && \
+            curl -o /tmp/cryptobib/crypto_crossref.bib https://cryptobib.di.ens.fr/cryptobib/static/files/crypto_crossref.bib && \
+            curl -o /tmp/cryptobib/crypto_custom.bib https://cryptobib.di.ens.fr/cryptobib/static/files/crypto_custom.bib
+      - name: Upload PDF as a new GitHub release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          automatic_release_tag: "paper-build-${{ github.run_number }}"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          title: "Paper Build #${{ github.run_number }}"
+          files: "${{ env.DOCPATH }}.pdf"
