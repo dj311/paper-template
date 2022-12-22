@@ -1,0 +1,29 @@
+name: Build paper
+on: workflow_dispatch
+run-name: Build paper
+jobs:
+  build_paper:
+    runs-on: ubuntu-latest
+    env:
+      DOCPATH: paper/project-name
+      BIBINPUTS: /tmp/cryptobib
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: "${{ env.DOCPATH }}.tex"
+          latexmk_use_xelatex: true
+          latexmk_shell_escape: true
+          work_in_root_file_dir: true
+          extra_system_packages: "curl"
+          pre_compile: "mkdir /tmp/cryptobib && curl -o /tmp/cryptobib/abbrev3.bib https://cryptobib.di.ens.fr/cryptobib/static/files/abbrev3.bib && curl -o /tmp/cryptobib/crypto_crossref.bib https://cryptobib.di.ens.fr/cryptobib/static/files/crypto_crossref.bib"
+      - name: Upload PDF as a new GitHub release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          automatic_release_tag: "current_github_build"
+          prerelease: true
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          title: "Paper #${{ github.sha }}"
+          files: "${{ env.DOCPATH }}.pdf"
