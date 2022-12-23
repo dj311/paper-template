@@ -1,10 +1,16 @@
-\documentclass[a4paper,10pt]{llncs}
-
 %% CONFIG
 
+\def\isdraft{1}
 \def\isanonymous{0}
 \def\isfullversion{0}
 \def\buildexternal{1}
+
+\documentclass[
+  \if\isdraft1 draft, \fi
+  a4paper,
+  10pt,
+]{llncs}
+
 
 %% There is a package that you should include first: nag. Why first? Because it warns you about
 %% obsolete commands and package. https://daniel-j-h.github.io/post/latex-a-modern-approach/
@@ -20,8 +26,10 @@
 
 %% LINE NUMBERS
 
-\usepackage{lineno}
-\linenumbers{}
+\if\isdraft1
+  \usepackage{lineno}
+  \linenumbers{}
+\fi
 
 %% TODO NOTES
 
