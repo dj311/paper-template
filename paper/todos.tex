@@ -1,0 +1,30 @@
+\if\isdraft1
+  \usepackage[
+    color=magenta!10!yellow!30,
+    bordercolor=black!20!magenta!10!yellow!60,
+    linecolor=black!20!magenta!10!yellow!60,
+    textsize=footnotesize,
+    colorinlistoftodos,
+  ]{todonotes}
+
+  % Match todo notes to class (maybe there is a better way to do this?)
+  \makeatletter
+  \@ifclassloaded{acm}{%
+    % Doesn't change layout but means comments in
+    % margins will go closer to the edge of the page:
+    \setlength{\marginparwidth}{1.5cm}
+    % And closer to the edge of the text:
+    \setlength{\marginparsep}{0.1cm}
+  }{%
+  }
+  \makeatother
+
+  % Tasks, bugs and comments
+  \newcommand{\task}[2][]{\todo[color=green!30,bordercolor=black!20!green!60,linecolor=black!20!green!60,#1]{\textbf{todo:} #2}\xspace}
+  \newcommand{\bug}[2][]{\todo[color=red!30,bordercolor=black!20!red!60,linecolor=black!20!red!60,#1]{\textbf{bug:} #2}\xspace}
+  \newcommand{\cmnt}[3][]{\todo[#1]{\textbf{#2:} #3}\xspace}
+\else
+  \newcommand{\task}[2][]{}
+  \newcommand{\bug}[2][]{}
+  \newcommand{\cmnt}[3][]{}
+\fi
