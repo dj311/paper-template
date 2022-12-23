@@ -34,9 +34,7 @@
 %% TODO NOTES
 
 \usepackage{xcolor}
-\definecolor{oxygenorange}{HTML}{FFDD00}
-\usepackage[color=oxygenorange]{todonotes}
-\newcommand{\malb}[2][inline]{\todo[#1]{\textbf{malb:} #2}\xspace}
+\input{todos}
 
 %% ANONYMOUS SUBMISSIONS
 
@@ -154,7 +152,7 @@
 
 \section{Introduction}\label{sec:introduction}
 
- \malb{An example note for some example text.}
+\cmnt{malb}{An example note for some example text.}
 
 %  \begin{figure}[htbp]
 %    \caption{something}\label{fig:something}
@@ -186,8 +184,16 @@
 % \end{lstlisting}
 
 \clearpage
+
 \bibliographystyle{alpha}
 \bibliography{abbrev3,crypto_crossref,local}
+
+\appendix
+
+% todonotes
+\if\isdraft1
+  \listoftodos[Comments and Tasks]{}
+\fi
 
 \end{document}
 
